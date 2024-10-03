@@ -401,4 +401,7 @@ FodyWeavers.xsd
 #folder
 
 .tmp/
+tmp/
+.tmp
+tmp
 *.log
