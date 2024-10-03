@@ -17,6 +17,10 @@ export default function Navbar() {
 						display={{ base: "none", sm: "flex" }}
 					>
 						<img src='/react.png' alt='logo' width={50} height={50} />
+						<img src='/golang.png' alt='logo' width={100} />
+						<Text fontSize={"28px"} fontWeight={"semibold"} fontFamily={"Georama"}>
+							Todo App
+						</Text>
 					</Flex>
 
 					{/* RIGHT SIDE */}

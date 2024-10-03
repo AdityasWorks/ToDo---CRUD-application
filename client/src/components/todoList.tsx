@@ -1,47 +1,56 @@
 import { Flex, Spinner, Stack, Text } from "@chakra-ui/react";
-import { useState } from "react";
 import TodoItem from "./todoItem";
+import { useQuery } from "@tanstack/react-query";
+
+export type Todo = {
+	_id: number;
+	body: string;
+	completed: boolean;
+};
 
 const TodoList = () => {
-	const [isLoading, setIsLoading] = useState(true);
-	const todos = [
-		{
-			_id: 1,
-			body: "Buy groceries",
-			completed: true,
+	const { data:todos, isLoading }= useQuery <Todo[]>({
+		queryKey: ["todos"],
+
+		queryFn: async () => {
+			try{
+				const res = await fetch("http://localhost:4000/api/todos");
+				const data = await res.json();
+
+				if (!res.ok) {
+					throw new Error(data.error || "Something went wrong!");
+				}
+
+				return data||[];
+			}catch (error) {
+				console.log(error);
+			}
+			
 		},
-		{
-			_id: 2,
-			body: "Walk the dog",
-			completed: false,
-		},
-		{
-			_id: 3,
-			body: "Do laundry",
-			completed: false,
-		},
-		{
-			_id: 4,
-			body: "Cook dinner",
-			completed: true,
-		},
-	];
+	})
+
 	return (
 		<>
-			<Text fontSize={"4xl"} textTransform={"uppercase"} fontWeight={"bold"} textAlign={"center"} my={5} ml={-10}>
+			<Text fontSize={"4xl"} 
+						textTransform={"uppercase"} 
+						fontWeight={"bold"}
+						bgGradient={"linear(to-r, green.400, blue.500, purple.600)"} 
+						textAlign={"center"} 
+						my={25} 
+						ml={-10}
+						bgClip={'text'}>
 				Today's Tasks
 			</Text>
-			{/* {isLoading && (
+			{isLoading && (
 				<Flex justifyContent={"center"} my={4}>
 					<Spinner size={"xl"} />
 				</Flex>
-			)} */}
+			)}
 			{!isLoading && todos?.length === 0 && (
 				<Stack alignItems={"center"} gap='3'>
-					<Text fontSize={"xl"} textAlign={"center"} color={"gray.500"}>
+					<Text fontSize={"xl"} textAlign={"center"} color={"gray.700"} ml={-7}>
 						All tasks completed! 🤞
 					</Text>
-					<img src='/go.png' alt='Go logo' width={70} height={70} />
 				</Stack>
 			)}
 			<Stack gap={3}>
